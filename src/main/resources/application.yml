@@ -11,14 +11,14 @@ spring:
       prefix: /WEB-INF/view/
       suffix: .jsp
   datasource:
-    url: jdbc:mysql://localhost:3306/gstock?serverTimezone=Asia/Seoul&characterEncoding=UTF-8
+    url: jdbc:mysql://43.200.3.134:3306/gstock?serverTimezone=Asia/Seoul&characterEncoding=UTF-8
     driver-class-name: com.mysql.cj.jdbc.Driver
-    username: root
-    password: asd1234
+    username: awskjh
+    password: 7193asd
   servlet:
     multipart:
       enabled: true
-      location: c:/workspace/upload/
+      location: /home/upload/
       max-file-size: 50MB
       max-request-size: 50MB
   jpa:
