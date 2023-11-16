@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper
+	namespace="com.green.greenstock.repository.interfaces.AdvisorRepository">
+
+	<select id="findById" resultType="Advisor">
+		select * from advisor where
+		advisor_id = #{advisorId}
+	</select>
+
+	<!-- findAll -->
+
+	<select id="findAll" resultType="Advisor">
+		select * from advisor
+	</select>
+
+	<!-- findByStatus -->
+
+	<select id="findByStatus" resultType="Advisor">
+		select * from advisor where
+		status = #{status}
+	</select>
+
+	<select id="findAllInfoByStatus" resultType="com.green.greenstock.dto.AdminExpertDTO">
+		select * from
+		advisor a join user_tb u on a.user_id = u.id
+		join image i on a.img_id = i.img_id
+		where a.status = #{status}
+		order by a.created_at desc;
+	</select>
+	
+	<select id="findAllInfoStatusAsc" resultType="com.green.greenstock.dto.AdminExpertDTO">
+		select * from
+		advisor a join user_tb u on a.user_id = u.id
+		join image i on a.img_id = i.img_id
+		where status > 0
+		order by status asc
+	</select>
+	
+	<select id="findPagedInfoByStatus" parameterType="com.green.greenstock.dto.PagingDto" resultType="com.green.greenstock.dto.AdminExpertDTO">
+		select * from
+		advisor a join user_tb u on a.user_id = u.id
+		join image i on a.img_id = i.img_id
+		where status > 0
+		order by status asc
+		limit #{paging.recordSize}
+	</select>
+
+	<update id="updateStatus">
+		update advisor set status = #{status} where
+		advisor_id = #{advisorId}
+	</update>
+	
+	<insert id = "insertRefuseReason">
+		insert into advisor_refuse(advisor_id,refuse_msg)
+		values (#{advisorId},#{refuseMsg})
+	</insert>
+	
+	<select id="findAdvisorRefuseByAdvisorId" resultType="com.green.greenstock.dto.RefuseDTO">
+		select * from advisor_refuse where
+		advisor_id = #{advisorId}
+	</select>
+
+	<select id="findCountByAdvisorNickname" resultType="int">
+		select count(*) from advisor
+		where advisor_nick_name = #{nickname}
+	</select>
+
+	<!-- findByAdvisorSubCount --> 
+
+	<select id="findByAdvisorSubCount" resultType="com.green.greenstock.dto.AdvisorSubCountResDto">
+		SELECT a.*, i.img_name ,COALESCE(sub.subscribe_count, 0) AS 'subscribe_count'
+		FROM advisor a
+		LEFT JOIN (
+			SELECT sta.advisor_id, count(advisor_id) AS 'subscribe_count'
+			FROM subscribe_to_advisor sta 
+			GROUP BY advisor_id
+		) sub 
+		USING(advisor_id)
+		JOIN image i 
+		ON i.img_id = a.img_id 
+		WHERE a.status = 2
+		<if test="orderBy != null">
+			ORDER BY 
+			<choose>
+      			<when test="orderBy == 'subscribeDesc'">subscribe_count DESC</when>
+      			<when test="orderBy == 'costDesc'">subscription_cost DESC</when>
+      			<when test="orderBy == 'createdAtDesc'">created_at DESC</when>
+      			<otherwise>subscribe_count DESC</otherwise>
+    		</choose>
+		</if>
+	</select>	
+</mapper>
+

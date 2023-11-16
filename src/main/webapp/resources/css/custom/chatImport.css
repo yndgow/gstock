@@ -1,0 +1,9 @@
+@charset "EUC-KR";
+#unSubscribe-btn{
+ 	width: 100%; 
+ 	height: 30px; 
+ 	border-radius: 3px; 
+ 	background-color: #e55; 
+ 	color: white; 
+ 	margin-bottom: 10px;
+}

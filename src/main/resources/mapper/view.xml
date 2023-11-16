@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper
+	namespace="com.green.greenstock.repository.interfaces.ViewRepository">
+
+	<select id = "findAll" resultType = "com.green.greenstock.dto.ViewLogDTO">
+		select * from siteViewCount order by date_column asc;
+	</select>
+
+
+	<insert id="siteViewCountUp">
+		INSERT INTO
+		siteViewCount (date_column, viewCount)
+		VALUES (CURDATE(), 1)
+		ON DUPLICATE KEY UPDATE viewCount = viewCount + 1;
+	</insert>
+
+
+</mapper>

@@ -1,0 +1,38 @@
+.board-content{
+	width: 80%;
+	min-width: 800px;
+	height: 900px;
+	margin: 50px auto;
+	padding: 50px;
+/*	border-radius: 20px;*/
+	border: 1px solid lightgrey;
+/*	box-shadow: 0 1px 5px 1px rgba(0, 0, 0, 0.1);*/
+}
+.write-tb{
+	width: 90%;
+	height: 800px;
+	margin: auto;
+	text-align: center;
+}
+.write-tb td{
+	min-height: 50px;
+}
+.write-tb td input{
+	width: 100%;
+	height: 50px;
+	border: 1px solid lightgrey;
+}
+.write-tb td select{
+	width: 80%;
+	height: 48px;
+	text-align: center;
+	background: #fff url('/resources/img/arrow-down-light.png') no-repeat;
+    background-position: right center;
+}
+.write-select{
+	width: 80%;
+	height: 50px;
+	margin: auto;
+    border: 1px solid lightgrey;
+    border-radius: 5px;
+}

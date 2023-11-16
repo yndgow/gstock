@@ -1,0 +1,26 @@
+@charset "UTF-8";
+
+#responsive-data-table th, #responsive-data-table td {
+  text-align: center;
+  vertical-align: middle; /* 셀 내용을 수직 가운데 정렬 */
+}
+
+#responsive-data-table img.tbl-thumb {
+  display: block;
+  margin: 0 auto;
+}
+
+#responsive-data-table th {
+  text-align: center;
+}
+
+#form-control form-control-sm{
+	width: 300px;
+	text-align: center;	
+}
+
+#card-body{
+	width:150px;
+	text-align: center;
+}
+

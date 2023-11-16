@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.green.greenstock.repository.interfaces.UserRepository">
+ 
+	<insert id="insertUser">
+	  	insert into user_tb(user_name, password, email, tel, birth_date, reg_date, roletype_id, suspended)
+	  	values(#{userName}, #{password}, #{email}, #{tel}, #{birthDate}, now(), #{roletypeId}, #{suspended})
+  	</insert>
+  	
+  	<select id="findAllUser" resultType="User">
+		select * from user_tb order by id desc limit #{offset}, #{recordSize}
+	</select>
+	
+	<select id="findSearchUser" resultType="User">
+		select * from user_tb where user_name = #{search} order by id desc limit #{paging.offset}, #{paging.recordSize}
+	</select>
+  	
+  	<select id="findUserByUserName" parameterType="com.green.greenstock.repository.model.User" resultType="User">
+		select * from user_tb where user_name = #{userName}
+	</select>
+	
+	<select id="findUserName" resultType="User">
+		select * from user_tb where user_name = #{userName}
+	</select>
+
+	<select id="findUserFromEmail" resultType="User">
+		select * from user_tb where email = #{email}
+	</select>
+	
+	<select id="findBySuspended" resultType="User">
+		select * from user_tb where suspended = #{b}
+	</select>
+	
+	<select id="countUser">
+		select count(*) from user_tb
+	</select>
+	
+	<select id="countSubUser">
+		select count(*) from pay_tb where month(created_at) = #{i}
+	</select>
+	
+	<select id="findAdminMainUserList" resultType="User">
+		select * from user_tb order by id desc limit 10
+	</select>
+	
+	<select id="findUserPayment" resultType="PaySubscribe">
+		select * from pay_subscribe where user_id = #{id} order by id desc
+	</select>
+	
+	<update id="modifyUserPw">
+		update user_tb set password = #{password} where user_name = #{userName}
+	</update>
+	
+	<update id="modifyUserInfo">
+		update user_tb set user_name = #{userName}, password = #{password}, email = #{email}, tel = #{tel}, birth_date = #{birthDate}, suspended = #{suspended}, suspension_end_date = #{suspensionEndDate} where id = #{id}
+	</update>
+	
+	<delete id="deleteUser">
+		delete from user_tb where id = #{id}
+	</delete>
+
+	<select id="findById" resultType="User">
+		select * from user_tb where id = #{id}
+	</select>
+</mapper>
+

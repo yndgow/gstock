@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.green.greenstock.repository.interfaces.BoardRepository"> 
+
+	<select id="findCategoryList" resultType="String">
+		select name
+		from board_category
+	</select>
+
+	<insert id="insertBoard">
+		insert into board(
+		    title,
+		    user_id,
+		    content,
+		    category_id
+		) values(
+			#{title},
+			#{userId},
+			#{content},
+			#{categoryId}
+		)
+	</insert>
+	
+	<select id="selectMyBoardList" parameterType="com.green.greenstock.dto.PagingDto" resultType="com.green.greenstock.repository.model.Board">
+		select b.id,
+				title,
+				b.user_id,
+				b.content,
+				b.date,
+				category_id,
+				views,
+				user_name,
+				r.reply,
+				(select count(user_id) from board_recommand rc
+				 where rc.board_id = b.id) recommand
+		from board b
+		join user_tb u
+		on b.user_id = u.id
+		left join (select board_id, count(*) reply
+					 from reply
+				 	where deleted != 1
+					group by board_id) r
+		on b.id = r.board_id
+		where b.user_id = #{userId}
+		order by id desc
+		limit #{offset}, #{recordSize}
+	</select>
+	
+	<select id="selectBoardCount" resultType="int">
+	    select count(*)
+	    from board b
+	    join user_tb u on b.user_id = u.id
+	    <where>
+	        <if test='categoryId != "0"'>
+	            and category_id = #{categoryId}
+	        </if>
+	        <if test='searchWord != null'>
+	            and
+			<if test='searchType == "title"'>
+				title
+			</if>
+			<if test='searchType == "content"'>
+				content
+			</if>
+			<if test='searchType == "userName"'>
+				user_name
+			</if>
+				like concat('%', #{searchWord}, '%')
+	        </if>
+	    </where>
+	</select>
+
+	
+	<select id="selectBoardById" resultType="com.green.greenstock.repository.model.Board">
+		select b.id,
+				title,
+				user_id,
+				content,
+				date,
+				category_id,
+				views,
+				user_name,
+				(select count(user_id) from board_recommand rc
+				 where rc.board_id = b.id) recommand
+		from board b
+		join user_tb u
+		on b.user_id = u.id
+		where b.id = #{id}
+	</select>
+
+	<update id="updateBoard">
+		update board 
+		set title = #{title},
+		    content = #{content}
+		where id=#{id}
+	</update>
+
+	<update id="deleteBoard">
+		delete from board 
+		where id=#{id}
+	</update>
+
+	<select id="selectBoardSearchList" parameterType="com.green.greenstock.dto.PagingDto" resultType="com.green.greenstock.repository.model.Board">
+		select b.id,
+				title,
+				b.user_id,
+				b.content,
+				b.date,
+				category_id,
+				views,
+				user_name,
+				r.reply,
+				(select count(user_id) from board_recommand rc
+				 where rc.board_id = b.id) recommand
+		from board b
+		join user_tb u
+		on b.user_id = u.id
+		left join (select board_id, count(*) reply
+					 from reply
+				 	where deleted != 1
+					group by board_id) r
+		on b.id = r.board_id
+		<where>
+			<if test='categoryId != "0" and categoryId != null'>
+	            category_id = #{categoryId}
+	        </if>
+	        <if test='searchWord != null'>
+	            and
+				<if test='searchType == "title"'>
+					title
+				</if>
+				<if test='searchType == "content"'>
+					content
+				</if>
+				<if test='searchType == "userName"'>
+					user_name
+				</if>
+					like concat('%', #{searchWord}, '%')
+	        </if>
+		</where>
+		order by
+		<if test="orderType != null">
+		recommand desc,
+		</if> 
+		b.id desc
+		limit #{offset}, #{recordSize}
+	</select>
+	
+	<update id="viewCountUp">
+		update board 
+		set views = views + 1
+		where id = #{boardId}
+	</update>
+	
+	<insert id="thumbUp">
+		insert into board_recommand
+		values (#{boardId}, #{userId})
+	</insert>
+	
+	<select id="thumbCheck">
+		select IFNULL(max(user_id), 0)
+		from board_recommand
+		where board_id = #{boardId} and user_id = #{userId}
+	</select>
+	
+	<insert id="thumbDelete">
+		delete from board_recommand
+		where board_id = #{boardId}
+		and user_id = #{userId}
+	</insert>
+	
+	<select id="countMyBoard">
+		select count(*) from board
+		where user_id = #{userId}
+	</select>
+</mapper>

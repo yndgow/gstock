@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.green.greenstock.repository.interfaces.StockRepository"> 
+
+	<select id="getAutoCompleteData" resultType="String">
+		select companyName
+		from stockList
+	</select>
+	
+	<select id="getStockByStockName" resultType="com.green.greenstock.dto.Stock">
+		select *
+		from stockList
+		where companyName = #{companyName}
+	</select>
+	
+	
+
+
+</mapper>

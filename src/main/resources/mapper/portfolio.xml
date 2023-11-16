@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper
+	namespace="com.green.greenstock.repository.interfaces.PortfolioRepository">
+
+	<select id="findByPortfolioId"
+		resultType="com.green.greenstock.dto.MyPortfolio">
+		select *
+		from myPortfolio
+		where p_id = #{pId}
+	</select>
+	
+	<select id="findAllDataByPortfolioId"
+		resultType="com.green.greenstock.dto.PortfolioInfoDTO">
+		select *
+		from myPortfolio p
+		left join mystocks ms
+		on ms.p_id = p.p_id
+		where ms.p_id = #{pId}
+	</select>
+	
+	<select id="findAllPortfolioDescRor"
+		resultType="com.green.greenstock.dto.MyPortfolio">
+		select *
+		from myPortfolio
+		where visible = true
+		order by ror desc limit 10
+	</select>
+	
+	<select id="findAllPortfolio"
+		resultType="com.green.greenstock.dto.MyPortfolio">
+		select *
+		from myPortfolio
+	</select>
+
+	<select id="findByuserId"
+		resultType="com.green.greenstock.dto.MyPortfolio">
+		select *
+		from myPortfolio
+		where user_id = #{id}
+	</select>
+
+	<insert id="savePortfolio">
+		INSERT INTO myPortfolio(title, discription,user_id)
+		VALUES (#{pf.title}, #{pf.discription}, #{id})
+	</insert>
+
+	<update id="updateTitle">
+		UPDATE myPortfolio
+		SET title = #{title}
+		WHERE p_id =
+		#{pId}
+	</update>
+
+	<update id="updateDiscription">
+		UPDATE myPortfolio
+		SET discription = #{discription}
+		WHERE p_id = #{pId}
+	</update>
+
+	<update id="buySellStock">
+		UPDATE myPortfolio
+		SET sell_money = #{sellMoney}, totalAsset = #{totalAsset}, ror = #{ror}
+		WHERE p_id = #{pId}
+	</update>
+	
+	<update id="updateVisibility">
+		UPDATE myPortfolio
+		SET visible = #{isVisible}
+		WHERE p_id = #{pId}
+	</update>
+	
+	<update id="updateRor">
+		UPDATE myPortfolio
+		SET ror = #{ror}
+		WHERE p_id = #{pId}
+	</update>
+
+	<delete id="deleteByPortfolioId">
+		DELETE FROM myPortfolio
+		WHERE p_id = #{pfId}
+	</delete>
+
+</mapper>

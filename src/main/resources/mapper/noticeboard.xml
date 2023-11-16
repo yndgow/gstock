@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace= "com.green.greenstock.repository.interfaces.BoardNoticeRepository">
+	
+	
+	<!-- 공지사항 리스트 (페이징,공개,비공개 추가)  -->
+ <select id = "findAll" resultType = "com.green.greenstock.repository.model.Noticeboard" >
+	SELECT *
+    FROM noticeboard
+    <where>
+    	<if test="noticeState != null">
+    		notice_state = #{noticeState}
+    	</if>
+    	<if test="noticeTitle !=null">
+    	 	AND notice_title like CONCAT("%", #{noticeTitle}, "%")     	 	    	      
+    	</if>        	
+    </where>   
+    ORDER BY notice_updated DESC
+    LIMIT #{offset}, 10; 			
+</select>
+	
+	<!-- 공지사항 작성 -->
+	<insert id = "writeNotice">
+	INSERT INTO noticeboard(		
+			user_id,
+			notice_title,
+			notice_content,
+			notice_created,
+			notice_updated		
+		)
+	VALUES(#{userId},#{noticeTitle},#{noticeContent},now(),now());
+	</insert>
+	
+	<!-- 공지사항 수정  -->
+	<update id = "updateNotice">
+		UPDATE noticeboard 
+		SET 
+			notice_title = #{noticeTitle}, 
+			notice_content = #{noticeContent}, 
+			notice_updated = now(),
+			notice_state = #{noticeState} 
+		WHERE id = #{id};	
+	</update>
+	
+	<!-- 공지사항 삭제  -->
+	<delete id="deleteNotice">
+		DELETE FROM  noticeboard
+		WHERE id = #{id};
+	</delete>
+	
+	<!-- 공지사항 상세보기  -->
+	<select id = "viewNoticePage" resultType ="com.green.greenstock.repository.model.Noticeboard">
+		SELECT * FROM noticeboard WHERE id = #{id};
+	</select>
+	
+	<!-- 조회수 증가 -->
+	<update id = "noticeHitCount">
+		UPDATE noticeboard
+		SET hit_count = hit_count +1
+		WHERE id = #{id};
+	</update>
+	
+	<!--  데이터 조회 (공개 비공개 추가)  -->
+	<select id ="listCount" resultType="int" >
+	SELECT count(*) FROM noticeboard
+	<where>
+    	<if test="noticeState != null">
+    		notice_state = #{noticeState}
+    	</if>
+    	<if test="noticeTitle !=null">
+    	 	AND notice_title like CONCAT("%", #{noticeTitle}, "%")     	 	    	      
+    	</if> 	
+    </where> 
+	</select>
+			
+</mapper>

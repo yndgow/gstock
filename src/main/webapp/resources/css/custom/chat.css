@@ -1,0 +1,112 @@
+@charset "EUC-KR";
+@font-face {
+  font-family: "Dovemayo";
+  src: url("/resources/fonts/Dovemayo_gothic.ttf") format("truetype");
+  font-weight: normal;
+}
+*{
+	font-family: 'Dovemayo', sans-serif !important;
+	font-weight: normal;
+}
+#chat-messages{
+	height: 440px;
+	padding-bottom: 10px;
+	overflow: auto;
+	background-color: rgba(52,116,212,0.2);
+	border-top-right-radius: 15px;
+	border-top-left-radius: 15px;
+}
+#chat-messages::-webkit-scrollbar {
+    width: 10px;
+}
+#chat-messages::-webkit-scrollbar-thumb {
+    background-color: rgba(52,116,212,0.5);
+}
+#chat-messages::-webkit-scrollbar-track {
+	border-top-right-radius: 15px;
+    background-color: rgba(10,10,10,0.1);
+}
+.my-message-div{
+	width: 100%;
+	margin-bottom: 5px;
+	display: flex;
+	flex-direction: row-reverse;
+}
+.message-div{
+	width: 100%;
+	margin-bottom: 5px;
+	display: flex;
+}
+.my-message-user{
+	width:50%;
+	float: right;
+	text-align: right;
+	padding-right: 10px;
+	overflow: hidden;
+}
+.message-user{
+	width:50%;
+	float: left;
+	text-align: left;
+	padding-left: 10px;
+	overflow: hidden;
+}
+.my-message-div .message-content{
+	width: 60%;
+	min-height: 45px;
+	border-radius: 5px;
+	margin: 5px 5px 5px 5px;
+	padding: 5px;
+	background-color: rgb(246,224,17);
+	box-shadow: 0 1px 5px 1px rgba(0,0,0,0.2);
+}
+.message-div .message-content{
+	width: 60%;
+	min-height: 45px;
+	border-radius: 5px;
+	margin: 5px 5px 5px 5px;
+	padding: 5px;
+	background-color: white;
+	box-shadow: 0 1px 5px 1px rgba(0,0,0,0.2);
+}
+.submit-div{
+	width: 100%; 
+	display: flex;
+}
+.user-list-div{
+	max-height: 200px;
+	border: 1px solid #777;
+	margin: 5px;
+	padding: 15px;
+	overflow: auto;
+}
+.delete-btn{
+	width: 25px;
+	height: 25px;
+	margin: 20px;
+	padding: 0px 7px;
+	border: none;
+	border-radius: 6px;
+	color: white;
+	box-shadow: 0 1px 5px 1px rgba(0,0,0,0.2);
+	background-color: #e55;
+	cursor: pointer;
+}
+.send-btn{
+	width: 80px;
+	height: 50px;
+	border: none;
+	color: white;
+	box-shadow: 0 1px 5px 1px rgba(0,0,0,0.2);
+	background-color: #3474d4;
+	cursor: pointer;
+}
+.date-messages{
+	width: 100%;
+	height: 25px;
+	margin: auto;
+	text-align: center;
+	color: white;
+	background-color: rgba(0,0,0,0.2);
+	border-bottom: 1px solid rgba(0,0,0,0.2);
+}

@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.green.greenstock.repository.interfaces.ReplyRepository"> 
+
+	<select id="selectReplyList" parameterType="com.green.greenstock.dto.ReplyPagingDto" resultType="com.green.greenstock.repository.model.Reply">
+		select reply.id, board_id, user_id, user_name, content, date, ref, level, step, deleted,
+				(select count(user_id) from reply_recommand rc
+				 where rc.reply_id = reply.id) recommand
+		from reply
+		join user_tb on reply.user_id = user_tb.id
+		where board_id=#{boardId}
+		order by ref, step desc
+		limit #{offset}, #{recordSize}
+	</select>
+	
+	<select id="selectReplyCount" resultType="int">
+	    select count(*)
+	    from reply
+	    where board_id = #{boardId} 
+	</select>
+	
+	<select id="selectMaxRef" resultType="int">
+		select IFNULL(max(ref),0) ref
+		from reply
+		where board_id=#{boardId}
+	</select>
+
+	<insert id="insertReply">
+		insert into reply(
+			board_id, user_id, content, ref, level, step, parent_id
+		) values (
+			#{boardId}, #{userId}, #{content}, #{ref}, #{level}, #{step}, #{parentId}
+        )
+	</insert>
+	
+	<update id="updateReply">
+		update reply 
+		set step = step + #{step} where board_id = #{boardId} and ref = #{ref} and step >= #{step}
+	</update>
+	
+	<select id="getStep" resultType="int">
+		select IFNULL(min(step),0) from reply where board_id = #{boardId} and ref = #{ref} and parent_id = #{parentId}
+	</select>
+	
+	<select id="maxStep" resultType="int">
+		select IFNULL(max(step)+1,1) step from reply where board_id = #{boardId} and ref = #{ref} and #{level} > level and #{step} > step;
+	</select>
+	
+	<update id="deleteReply">
+		update reply
+		set content = '삭제된 댓글입니다'
+			,deleted = 1
+		where id=#{id}
+	</update>
+	<update id="deleteReplyRecommand">
+		delete from reply_recommand
+		where reply_id=#{id}
+	</update>
+	
+	<insert id="replyThumbUp">
+		insert into reply_recommand
+		values (#{replyId}, #{userId})
+	</insert>
+	
+	<select id="replyThumbCheck">
+		select IFNULL(max(user_id), 0)
+		from reply_recommand
+		where reply_id = #{replyId} and user_id = #{userId}
+	</select>
+	
+	<insert id="replyThumbDelete">
+		delete from reply_recommand
+		where reply_id = #{replyId}
+		and user_id = #{userId}
+	</insert>
+	
+	<select id="getReplyCount" resultType="int">
+		select count(reply_recommand.user_id) 
+		from reply_recommand 
+		join reply on reply_recommand.reply_id = reply.id 
+		where reply_id = #{replyId}
+	</select>
+	
+	<select id="replyUserCheck" resultType="Integer">
+		select reply_recommand.reply_id 
+		from reply_recommand 
+		join reply on reply_recommand.reply_id = reply.id 
+		where reply_recommand.user_id = #{userId} and board_id = #{boardId};
+	</select>
+	
+	<select id="selectMyReply" parameterType="com.green.greenstock.dto.ReplyPagingDto" resultType="com.green.greenstock.repository.model.Reply">
+		select reply.id, board_id, user_id, user_name, content, date, ref, level, step, deleted,
+				(select count(user_id) from reply_recommand rc
+				 where rc.reply_id = reply.id) recommand
+		from reply
+		join user_tb on reply.user_id = user_tb.id
+		where user_id=#{userId}
+		limit #{offset}, #{recordSize}
+	</select>
+	
+	<select id="countMyReply">
+		select count(*) from reply
+		where user_id = #{userId}
+	</select>
+</mapper>

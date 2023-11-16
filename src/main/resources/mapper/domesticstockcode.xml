@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.green.greenstock.repository.interfaces.DomesticStockCodeRepository"> 
+
+	<select id="findByCompanyName" resultType="com.green.greenstock.dto.DomesticStockCode">
+		select * from domestic_stock_code dsc where dsc.companyName = #{companyName};
+	</select>
+	
+	<select id="findAllLikeCompanyName" resultType="com.green.greenstock.dto.DomesticStockCode">
+		select * from domestic_stock_code dsc where dsc.companyName like CONCAT ('%', #{companyName}, '%');
+	</select>
+
+	<select id="findByCompanyCode" resultType="com.green.greenstock.dto.DomesticStockCode">
+		select * from domestic_stock_code dsc where dsc.companyCode = #{companyCode}
+	</select>
+
+</mapper>
